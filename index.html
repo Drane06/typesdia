@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercice IA - Menu Déroulant</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body { 
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container { 
+            max-width: 1200px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        h2 {
+            text-align: center;
+            color: #764ba2;
+            margin: 30px 0 20px 0;
+            font-size: 1.8em;
+            font-weight: 600;
+        }
+        
+        /* --- Nouveaux Styles pour les Définitions --- */
+        .definitions-section {
+            margin: 40px auto;
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e9e9f4;
+        }
+
+        .definitions-section h3 {
+            color: #764ba2;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f0f8;
+            padding-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .definitions-section ul, .definitions-section ol {
+            list-style-type: none;
+            padding-left: 0;
+            margin-bottom: 25px;
+        }
+
+        .definitions-section li {
+            padding: 8px 0;
+            line-height: 1.6;
+            font-size: 0.95em;
+            color: #444;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .definitions-section ul li::before {
+            content: '•';
+            color: #667eea;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+            padding-right: 10px;
+            flex-shrink: 0; /* Empêche le point de s'écraser */
+        }
+        
+        .definitions-section ol li {
+            counter-increment: list-counter;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .definitions-section ol li::before {
+            content: counter(list-counter) ".";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .definitions-section strong {
+            color: #333;
+        }
+        /* --- Fin Nouveaux Styles --- */
+
+        
+        table { 
+            width: 100%; 
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 30px;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        th, td { 
+            padding: 18px;
+            border: none;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.05em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        th:first-child {
+            border-top-left-radius: 12px;
+        }
+        
+        th:last-child {
+            border-top-right-radius: 12px;
+        }
+        
+        tr {
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        tr:hover {
+            background: #f8f9ff;
+        }
+        
+        tr:nth-child(even) {
+            background: #fafafa;
+        }
+        
+        tr:nth-child(even):hover {
+            background: #f8f9ff;
+        }
+        
+        td {
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        td:first-child {
+            font-weight: 500;
+            color: #444;
+        }
+        
+        /* Styles pour le nouveau menu déroulant */
+        .answer-select {
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 300px;
+            background-color: white;
+            font-family: 'Poppins', sans-serif;
+            appearance: none; /* Désactive le style par défaut du navigateur */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23667eea' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg>%");
+            background-repeat: no-repeat;
+            background-position: right 10px top 50%;
+            background-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .answer-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        
+        .incorrect { 
+            border-color: #ff6b6b !important;
+            box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.2) !important;
+            color: #c90000;
+            animation: shake 0.5s;
+        }
+        
+        .correct {
+            border-color: #51cf66 !important;
+            box-shadow: 0 0 0 4px rgba(81, 207, 102, 0.2) !important;
+            color: #37b24d;
+            animation: success 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        @keyframes success {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.01); }
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        button {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+        
+        button:active {
+            transform: translateY(-1px);
+        }
+        
+        button:disabled {
+            background: linear-gradient(135deg, #cccccc 0%, #999999 100%);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        
+        #resultat {
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #fff8ff 100%);
+            color: #667eea;
+        }
+        
+        .grade-display {
+            margin-top: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .grade-display h3 {
+            color: white;
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        
+        .grade-number {
+            font-size: 4em;
+            font-weight: 700;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .grade-comment {
+            font-size: 1.2em;
+            margin-top: 15px;
+            font-weight: 300;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            table {
+                font-size: 0.9em;
+            }
+            
+            th, td {
+                padding: 12px 8px;
+            }
+            
+            .button-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            button {
+                width: 100%;
+            }
+
+            .answer-select {
+                padding: 10px 12px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Exercice Intelligence Artificielle</h1>
+        <p class="subtitle">Associez les catégories et méthodes d'apprentissage aux bons exemples (Indices en gras)</p>
+        
+        <!-- SECTION DES DÉFINITIONS AJOUTÉE ICI -->
+        <div class="definitions-section">
+            <h3>Les 4 grandes Catégories d'IA</h3>
+            <ul>
+                <li><strong>Symbolique :</strong> Basée sur des règles logiques (Si... Alors...) explicitement programmées par l'humain. (Ex. : Systèmes experts).</li>
+                <li><strong>Statistique :</strong> Utilise des modèles mathématiques complexes pour trouver des corrélations et prédire des résultats à partir de données massives. (Ex. : Détection de spam).</li>
+                <li><strong>Comportementale :</strong> Se concentre sur les actions, les mouvements et les décisions prises par l'IA dans un environnement (interaction avec le monde réel). (Ex. : Robotique, conduite autonome).</li>
+                <li><strong>Générative :</strong> Crée du nouveau contenu (texte, images, code, son) en apprenant la structure des données d'entrée. (Ex. : ChatGPT, Midjourney).</li>
+            </ul>
+            
+            <h3>Les 4 principales Méthodes d'Apprentissage</h3>
+            <ol>
+                <li><strong>Apprentissage Supervisé :</strong> L'IA apprend avec un "professeur" (données étiquetées : questions = réponses).</li>
+                <li><strong>Non Supervisé :</strong> L'IA découvre seule les motifs cachés et les structures dans des données non étiquetées.</li>
+                <li><strong>Apprentissage par Renforcement :</strong> L'IA apprend par essais et erreurs, en maximisant une "récompense" (score, objectif) pour les bonnes actions.</li>
+                <li><strong>Basé sur des Règles Fixes :</strong> Pas d'apprentissage. L'IA applique strictement le code programmé (comme un algorithme classique).</li>
+            </ol>
+        </div>
+        <!-- FIN DE LA SECTION DÉFINITIONS -->
+        
+        <h2>📋 Exemples à classer</h2>
+        <table>
+            <tr>
+                <th>Exemple</th>
+                <th>Catégorie d'IA</th>
+                <th>Méthode d'apprentissage</th>
+            </tr>
+            <tr>
+                <td>Un robot apprend à dessiner en observant des œuvres, puis crée ses propres tableaux. <strong>➡️ Indice : Il trouve des motifs dans les données brutes pour créer du neuf.</strong></td>
+                <td><select class="answer-select category-select" data-answer="Générative"></select></td>
+                <td><select class="answer-select method-select" data-answer="Non supervisé"></select></td>
+            </tr>
+            <tr>
+                <td>Un assistant vocal (Alexa, Google Assistant) apprend à reconnaître des mots et comprendre les commandes. <strong>➡️ Indice : Il reçoit un « Professeur » qui corrige ses erreurs.</strong></td>
+                <td><select class="answer-select category-select" data-answer="Comportementale"></select></td>
+                <td><select class="answer-select method-select" data-answer="Apprentissage supervisé"></select></td>
+            </tr>
+            <tr>
+                <td>Un robot joue à un jeu vidéo, teste et s’améliore à chaque partie. <strong>➡️ Indice : Il explore son environnement et reçoit une « récompense » pour un bon coup.</strong></td>
+                <td><select class="answer-select category-select" data-answer="Générative"></select></td>
+                <td><select class="answer-select method-select" data-answer="Apprentissage par renforcement"></select></td>
+            </tr>
+            <tr>
+                <td>Un logiciel apprend à distinguer les e-mails normaux des spams (avec e-mails marqués « spam »). <strong>➡️ Indice : Chaque e-mail est marqué d'une étiquette (correct ou incorrect) avant l'entraînement.</strong></td>
+                <td><select class="answer-select category-select" data-answer="Statistique"></select></td>
+                <td><select class="answer-select method-select" data-answer="Apprentissage supervisé"></select></td>
+            </tr>
+            <tr>
+                <td>Un aspirateur robot évite les obstacles tout seul grâce à ses capteurs. <strong>➡️ Indice : Il découvre la structure de la pièce par lui-même, sans étiquette de ce qui est un « mur » ou une « chaise ».</strong></td>
+                <td><select class="answer-select category-select" data-answer="Comportementale"></select></td>
+                <td><select class="answer-select method-select" data-answer="Non supervisé"></select></td>
+            </tr>
+            <tr>
+                <td>L’ordinateur Deep Blue joue aux échecs avec des règles programmées. <strong>➡️ Indice : Ses actions dépendent d'une base de connaissances immuable.</strong></td>
+                <td><select class="answer-select category-select" data-answer="Symbolique"></select></td>
+                <td><select class="answer-select method-select" data-answer="Basé sur des règles fixes"></select></td>
+            </tr>
+            <tr>
+                <td>Une voiture autonome apprend à reconnaître les panneaux sur des images annotées. <strong>➡️ Indice : Il reçoit des millions de photos avec des boîtes dessinées autour des objets à détecter.</strong></td>
+                <td><select class="answer-select category-select" data-answer="Comportementale"></select></td>
+                <td><select class="answer-select method-select" data-answer="Apprentissage supervisé"></select></td>
+            </tr>
+            <tr>
+                <td>Une machine trie les déchets (plastique, métal, papier) en observant et en s’ajustant. <strong>➡️ Indice : Elle doit grouper les objets similaires sans savoir à l'avance ce qu'est un « plastique » ou un « métal ».</strong></td>
+                <td><select class="answer-select category-select" data-answer="Comportementale"></select></td>
+                <td><select class="answer-select method-select" data-answer="Non supervisé"></select></td>
+            </tr>
+            <tr>
+                <td>Un logiciel médical applique des règles d’experts pour proposer un diagnostic. <strong>➡️ Indice : L'IA ne s'améliore pas en recevant plus de cas, elle applique juste des si/alors.</strong></td>
+                <td><select class="answer-select category-select" data-answer="Symbolique"></select></td>
+                <td><select class="answer-select method-select" data-answer="Basé sur des règles fixes"></select></td>
+            </tr>
+            <tr>
+                <td>ChatGPT lit des millions de textes et génère des réponses. <strong>➡️ Indice : Il crée du texte à partir d'un historique de conversations validées par des humains.</strong></td>
+                <td><select class="answer-select category-select" data-answer="Générative"></select></td>
+                <td><select class="answer-select method-select" data-answer="Apprentissage supervisé"></select></td>
+            </tr>
+        </table>
+        
+        <div class="button-container">
+            <button onclick="resetExercise()">🔄 Réinitialiser</button>
+            <button onclick="checkAnswers()">✅ Valider</button>
+        </div>
+        
+        <p id="resultat"></p>
+        <div id="gradeDisplay" style="display: none;"></div>
+    </div>
+
+    <script>
+        // Options pour les menus déroulants
+        const categoryOptions = ["Symbolique", "Comportementale", "Statistique", "Générative"];
+        const methodOptions = ["Apprentissage supervisé", "Non supervisé", "Apprentissage par renforcement", "Basé sur des règles fixes"];
+
+        /**
+         * Remplit dynamiquement tous les menus déroulants avec les options appropriées.
+         */
+        function populateSelects() {
+            document.querySelectorAll('.answer-select').forEach(select => {
+                // Détermine si c'est une colonne Catégorie ou Méthode
+                const isCategory = select.classList.contains('category-select');
+                const options = isCategory ? categoryOptions : methodOptions;
+
+                // Ajoute l'option par défaut "Choisir..."
+                const defaultOption = document.createElement('option');
+                defaultOption.value = "";
+                defaultOption.textContent = "Choisir...";
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                select.appendChild(defaultOption);
+
+                // Ajoute toutes les options
+                options.forEach(optionText => {
+                    const option = document.createElement('option');
+                    option.value = optionText;
+                    option.textContent = optionText;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        /**
+         * Vérifie les réponses sélectionnées par l'utilisateur.
+         */
+        function checkAnswers() {
+            let score = 0;
+            let total = 0;
+            const selects = document.querySelectorAll('.answer-select');
+            
+            selects.forEach(select => {
+                total++;
+                const selectedValue = select.value;
+                const correctAnswer = select.dataset.answer;
+
+                // Réinitialiser les classes pour la vérification actuelle
+                select.classList.remove('incorrect', 'correct');
+                
+                if (selectedValue && selectedValue === correctAnswer) {
+                    score++;
+                    select.classList.add('correct');
+                } else {
+                    // Ne marque comme incorrect que si une valeur a été sélectionnée (et qu'elle est fausse)
+                    if (selectedValue) {
+                         select.classList.add('incorrect');
+                    }
+                }
+            });
+
+            const resultat = document.getElementById('resultat');
+            resultat.textContent = `Score : ${score}/${total} réponses correctes`;
+            
+            // Calcul de la note sur 20
+            const grade = ((score / total) * 20).toFixed(1);
+            displayGrade(grade);
+        }
+
+        /**
+         * Affiche la note finale et le commentaire.
+         */
+        function displayGrade(grade) {
+            const gradeDisplay = document.getElementById('gradeDisplay');
+            let comment = '';
+            let emoji = '';
+            
+            if (grade >= 18) {
+                comment = 'Excellent ! Maîtrise parfaite !';
+                emoji = '🌟';
+            } else if (grade >= 16) {
+                comment = 'Très bien ! Félicitations !';
+                emoji = '🎉';
+            } else if (grade >= 14) {
+                comment = 'Bien ! Continue comme ça !';
+                emoji = '👍';
+            } else if (grade >= 12) {
+                comment = 'Assez bien ! Tu progresses !';
+                emoji = '💪';
+            } else if (grade >= 10) {
+                comment = 'Passable. Il faut réviser !';
+                emoji = '📚';
+            } else {
+                comment = 'Insuffisant. Reprends tes cours !';
+                emoji = '📖';
+            }
+            
+            gradeDisplay.innerHTML = `
+                <div class="grade-display">
+                    <h3>📊 Note finale</h3>
+                    <div class="grade-number">${emoji} ${grade}/20</div>
+                    <div class="grade-comment">${comment}</div>
+                </div>
+            `;
+            gradeDisplay.style.display = 'block';
+            
+            // Scroll vers la note
+            gradeDisplay.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        /**
+         * Réinitialise l'exercice en remettant les menus déroulants à leur état initial.
+         */
+        function resetExercise() {
+            document.querySelectorAll('.answer-select').forEach(select => {
+                select.value = ''; // Réinitialise à l'option par défaut (Choisir...)
+                select.classList.remove('incorrect', 'correct');
+            });
+
+            document.getElementById('resultat').textContent = '';
+            document.getElementById('gradeDisplay').style.display = 'none';
+        }
+
+        // Exécute la fonction pour remplir les menus déroulants au chargement de la page
+        window.onload = populateSelects;
+    </script>
+</body>
+</html>
